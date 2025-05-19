@@ -42,6 +42,7 @@ def parse_arguments():
                         help='If set, perform a dry run training with a mini-batch for sanity check.')
     parser.add_argument('--save_ckpt_every', type=int, default=500,
                         help='Save checkpoints every N steps. Default is 500.')
+    parser.add_argument('--use_coord_loss',action='store_true',help='Enable coordinate loss')
 
     args = parser.parse_args()
 
@@ -84,9 +85,10 @@ class Trainer():
                        model_name = 'LiftFeat',
                        n_steps = 160_000, lr= 3e-4, gamma_steplr=0.5, 
                        training_res = (800, 608), device_num="0", dry_run = False,
-                       save_ckpt_every = 500):
+                       save_ckpt_every = 500, use_coord_loss = False):
         print(f'MegeDepth: {use_megadepth}-{megadepth_batch_size}')
         print(f'COCO20k: {use_coco}-{coco_batch_size}')
+        print(f'Coordinate loss: {use_coord_loss}')
         self.dev = torch.device ('cuda' if torch.cuda.is_available() else 'cpu')
         
         # training model
@@ -149,6 +151,7 @@ class Trainer():
         self.ckpt_save_path = ckpt_save_path
         self.writer = SummaryWriter(ckpt_save_path + f'/logdir/{model_name}_' + time.strftime("%Y_%m_%d-%H_%M_%S"))
         self.model_name = model_name
+        self.use_coord_loss = use_coord_loss
         
         
     def generate_train_data(self):
@@ -285,12 +288,12 @@ class Trainer():
                 loss_kpts,acc_kpt=loss_info['loss_kpts'],loss_info['acc_kpt']
                 loss_normals=loss_info['loss_normals']
                 
-                # loss_items.append(loss_descs.unsqueeze(0))
-                # loss_items.append(loss_coordinates.unsqueeze(0))
                 loss_items.append(loss_fb_descs.unsqueeze(0))
-                loss_items.append(loss_fb_coordinates.unsqueeze(0))
                 loss_items.append(loss_kpts.unsqueeze(0))
                 loss_items.append(loss_normals.unsqueeze(0))
+                
+                if self.use_coord_loss:
+                    loss_items.append(loss_fb_coordinates.unsqueeze(0))
 
                 # nb_coarse = len(m1)
                 # nb_coarse = len(fb_m1)
@@ -358,7 +361,8 @@ if __name__ == '__main__':
         training_res=args.training_res,
         device_num=args.device_num,
         dry_run=args.dry_run,
-        save_ckpt_every=args.save_ckpt_every
+        save_ckpt_every=args.save_ckpt_every,
+        use_coord_loss=args.use_coord_loss
     )
 
     #The most fun part
