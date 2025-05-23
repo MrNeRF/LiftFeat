@@ -48,11 +48,10 @@ dependencies = [
     "timm>=0.4.0",
     "kornia>=0.6.0",
 ]
-urls = {
-    "Repository" = "https://github.com/MrNeRF/LiftFeat",
-    "Paper" = "https://arxiv.org/abs/2505.03422",
-    "Original Repository" = "https://github.com/lyp-deeplearning/LiftFeat"
-}
+[project.urls]
+Repository = "https://github.com/MrNeRF/LiftFeat"
+Paper = "https://arxiv.org/abs/2505.03422"
+"Original Repository" = "https://github.com/lyp-deeplearning/LiftFeat"
 
 [project.optional-dependencies]
 dev = [
