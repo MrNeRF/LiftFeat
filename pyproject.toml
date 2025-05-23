@@ -17,13 +17,12 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "MIT"}
+license = "MIT"
 keywords = ["computer vision", "feature matching", "deep learning", "3D geometry", "local features"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
@@ -49,7 +48,9 @@ dependencies = [
     "kornia>=0.6.0",
 ]
 [project.urls]
+Homepage = "https://github.com/MrNeRF/LiftFeat"
 Repository = "https://github.com/MrNeRF/LiftFeat"
+"Bug Tracker" = "https://github.com/MrNeRF/LiftFeat/issues"
 Paper = "https://arxiv.org/abs/2505.03422"
 "Original Repository" = "https://github.com/lyp-deeplearning/LiftFeat"
 
@@ -77,10 +78,10 @@ liftfeat-demo = "liftfeat.demo:main"
 liftfeat-train = "liftfeat.train:main"
 
 [tool.setuptools]
-packages = ["liftfeat"]
+packages = {find = {}}
 
 [tool.setuptools.package-data]
-liftfeat = ["weights/*.pth", "*.yaml", "*.yml"]
+"*" = ["weights/*.pth", "*.yaml", "*.yml"]
 
 [tool.black]
 line-length = 88
